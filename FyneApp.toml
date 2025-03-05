@@ -1,8 +1,8 @@
 Website = "https://github.com/sebastianrau/focusrite-mackie-control/"
 
 [Details]
-Icon = "logo.png"
-Name = "money-clock"
-ID = "com.github.sebastianrau.money-clock"
-Version = ""
-Build = 1
+  Icon = "logo.png"
+  Name = "money-clock"
+  ID = "com.github.sebastianrau.money-clock"
+  Version = "0.0.0"
+  Build = 2

@@ -101,6 +101,7 @@ $RECYCLE.BIN/
 *.lnk
 
 ## Project
+*.tomle
 **keys
 **build
 **test
