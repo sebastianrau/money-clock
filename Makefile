@@ -17,10 +17,9 @@ endif
 APP_TAGS = "build=${GIT_BUILD}","date=${GIT_DATE}","tag=${GIT_VERSION_TAG_FULL}"
 
 
-
-
 version:
 	sed -ie "s/Version = \"*.*.*\"/Version = \"${GIT_VERSION_TAG}\"/" FyneApp.toml
+
 
 app: app.windows64 app.darwin app.darwinArm app.linux64
 
@@ -41,6 +40,13 @@ app.linux64: version
 
 app.linuxArm: version
 	cd ${BUILD_DIR} && GOARCH=arm64 fyne package -os darwin -icon logo.png --src ../${SRC_FOLDER} --appVersion ${GIT_VERSION_TAG} --release --tags ${APP_TAGS} --appID ${APP_ID} --name ${APP_NAME}	
+
+app.cross: version
+	fyne-cross darwin -arch=amd64 -output money-clock
+	fyne-cross darwin -arch=arm64 -output money-clock
+	fyne-cross windows -arch=amd64 -output money-clock
+	fyne-cross linux -arch=amd64 -output money-clock
+	fyne-cross linux -arch=arm -output money-clock
 
 
 cli-lint:
