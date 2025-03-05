@@ -1,0 +1,8 @@
+Website = "https://github.com/sebastianrau/focusrite-mackie-control/"
+
+[Details]
+Icon = "logo.png"
+Name = "money-clock"
+ID = "com.github.sebastianrau.money-clock"
+Version = "0.1.0"
+Build = 1
