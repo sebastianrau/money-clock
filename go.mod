@@ -1,4 +1,4 @@
-module github.com/sebastianrau/money-ticker
+module github.com/sebastianrau/money-clock
 
 go 1.23.5
 

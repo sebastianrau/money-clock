@@ -28,10 +28,10 @@ app.windows64: version
 # TODO add zip of package
 
 app.darwin: version	
-	cd ${BUILD_DIR} && GOARCH=amd64 fyne package -os darwin -icon logo.png --src ../${SRC_FOLDER} --appVersion ${GIT_VERSION_TAG} --release --tags ${APP_TAGS} --appID ${APP_ID} --name ${APP_NAME}
+	cd ${BUILD_DIR} && GOARCH=amd64 fyne package -os darwin -icon logo.png --src ../${SRC_FOLDER} --appVersion ${GIT_VERSION_TAG} --release --tags ${APP_TAGS} --appID ${APP_ID} --name ${APP_NAME} -cert ../../mac_development.cer  
 
 app.darwinArm: version
-	cd ${BUILD_DIR} && GOARCH=arm64 fyne package -os darwin -icon logo.png --src ../${SRC_FOLDER} --appVersion ${GIT_VERSION_TAG} --release --tags ${APP_TAGS} --appID ${APP_ID} --name ${APP_NAME}.arm
+	cd ${BUILD_DIR} && GOARCH=arm64 fyne package -os darwin -icon logo.png --src ../${SRC_FOLDER} --appVersion ${GIT_VERSION_TAG} --release --tags ${APP_TAGS} --appID ${APP_ID} --name ${APP_NAME}.arm -cert ../../mac_development.cer  
 
 
 app.linux64: version
