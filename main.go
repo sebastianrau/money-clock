@@ -9,7 +9,7 @@ import (
 
 func main() {
 
-	a := app.NewWithID("com.github.sebastianrau.money-clock")
+	a := app.New()
 	a.SetIcon(logo.ResourceLogoPng)
 
 	w := a.NewWindow("Hello World")

@@ -2,6 +2,7 @@ package gui
 
 import (
 	"fmt"
+	"sync"
 	"time"
 
 	"fyne.io/fyne/v2"
@@ -13,13 +14,18 @@ import (
 )
 
 const (
-	TICK time.Duration = 30 * time.Millisecond
+	TICK time.Duration = 60 * time.Millisecond
 
 	PREF_MONEY_H          string  = "MONEY_PER_HOUR"
 	PREF_MONEY_H_FALLBACK float64 = 80.0
+
+	MONEY_MIN = 80.0
+	MONEY_MAX = 1500.0
 )
 
 type MainGui struct {
+	mu sync.Mutex
+
 	start     bool
 	startTime time.Time
 	timeCount time.Duration
@@ -58,13 +64,15 @@ func NewMainGui(w fyne.Window, a fyne.App) *MainGui {
 	mg.w.SetMaster()
 	mg.w.SetTitle("Money Clock")
 
-	mg.timeText = canvas.NewText("00:00:00.000", theme.Color(theme.ColorNamePressed))
+	mg.timeText = canvas.NewText("00:00:00.000", theme.Color(theme.ColorNameForeground))
 	mg.timeText.Alignment = fyne.TextAlignCenter
 
 	mg.moneyText = canvas.NewText("0,00 €", theme.Color(theme.ColorNameForeground))
 	mg.moneyText.Alignment = fyne.TextAlignCenter
 
 	mg.btnStart = widget.NewButton("Start", func() {
+		mg.mu.Lock()
+		defer mg.mu.Unlock()
 		mg.start = true
 		mg.startTime = time.Now()
 		mg.pauseTime = 0
@@ -76,6 +84,8 @@ func NewMainGui(w fyne.Window, a fyne.App) *MainGui {
 	})
 
 	mg.btnPause = widget.NewButton("Pause", func() {
+		mg.mu.Lock()
+		defer mg.mu.Unlock()
 		mg.start = !mg.start
 
 		if mg.start {
@@ -90,14 +100,16 @@ func NewMainGui(w fyne.Window, a fyne.App) *MainGui {
 	mg.btnPause.Disable()
 
 	mg.btnStop = widget.NewButton("Stop", func() {
+		mg.mu.Lock()
 		mg.start = false
-		mg.UpdateGui()
-
 		mg.btnStart.Enable()
 		mg.btnStop.Disable()
 		mg.btnPause.Importance = widget.MediumImportance
 		mg.btnPause.Disable()
 		mg.moneySlider.Enable()
+		mg.mu.Unlock()
+
+		mg.UpdateGui()
 
 	})
 	mg.btnStop.Disable()
@@ -105,7 +117,7 @@ func NewMainGui(w fyne.Window, a fyne.App) *MainGui {
 	mg.sliderLabel = widget.NewLabel(fmt.Sprintf("%.0f €/h", mg.moneyPerHour))
 	mg.sliderLabel.Alignment = fyne.TextAlignTrailing
 
-	mg.moneySlider = widget.NewSlider(10, 350)
+	mg.moneySlider = widget.NewSlider(MONEY_MIN, MONEY_MAX)
 	mg.moneySlider.Step = 5
 	mg.moneySlider.SetValue(mg.moneyPerHour)
 	mg.moneySlider.OnChanged = func(f float64) {
@@ -127,9 +139,16 @@ func NewMainGui(w fyne.Window, a fyne.App) *MainGui {
 	go func() {
 		t := time.NewTicker(TICK)
 		for range t.C {
-			if mg.start {
+			mg.mu.Lock()
+			start := mg.start
+			mg.mu.Unlock()
+
+			if start {
+				mg.mu.Lock()
 				mg.timeCount = (time.Since(mg.startTime) - mg.pauseTime)
 				mg.moneyValue = float64(mg.timeCount/time.Second) * (mg.moneyPerHour / 3600)
+				mg.mu.Unlock()
+
 				mg.UpdateGui()
 			}
 		}
@@ -143,6 +162,7 @@ func NewMainGui(w fyne.Window, a fyne.App) *MainGui {
 }
 
 func (m *MainGui) UpdateGui() {
+	m.mu.Lock()
 	if m.start {
 		m.moneyText.Text = fmt.Sprintf("%.2f €", m.moneyValue)
 		m.timeText.Text = fmtDuration(m.timeCount)
@@ -157,7 +177,13 @@ func (m *MainGui) UpdateGui() {
 
 		m.lastSize = actualSize
 	}
+	m.mu.Unlock()
 
-	m.timeText.Refresh()
-	m.moneyText.Refresh()
+	fyne.Do(func() {
+		m.mu.Lock()
+		defer m.mu.Unlock()
+		m.timeText.Refresh()
+		m.moneyText.Refresh()
+	})
+
 }

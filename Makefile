@@ -2,7 +2,7 @@ BUILD_DIR = build
 
 SRC_FOLDER = 
 APP_NAME = money-clock
-APP_ID = "com.github.sebastianrau.money-clock"
+APP_ID = "money-clock.gridx.de"
 
 GIT_VERSION_TAG=$(shell git describe --tags --abbrev=0)
 GIT_VERSION_TAG_FULL=$(shell git describe --tags --abbrev=2)

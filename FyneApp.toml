@@ -3,6 +3,6 @@ Website = "https://github.com/sebastianrau/focusrite-mackie-control/"
 [Details]
   Icon = "logo.png"
   Name = "money-clock"
-  ID = "com.github.sebastianrau.money-clock"
-  Version = "0.1.0"
-  Build = 39
+  ID = "ai.gridx.money-clock"
+  Version = "1.0.0"
+  Build = 51
