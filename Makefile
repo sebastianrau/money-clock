@@ -35,11 +35,11 @@ app.darwinArm: version
 
 
 app.linux64: version
-	cd ${BUILD_DIR} && GOARCH=amd64 fyne package -os darwin -icon logo.png --src ../${SRC_FOLDER} --appVersion ${GIT_VERSION_TAG} --release --tags ${APP_TAGS} --appID ${APP_ID} --name ${APP_NAME}	
+	cd ${BUILD_DIR} && GOARCH=amd64 fyne package -os linux -icon logo.png --src ../${SRC_FOLDER} --appVersion ${GIT_VERSION_TAG} --release --tags ${APP_TAGS} --appID ${APP_ID} --name ${APP_NAME}	
 
 
 app.linuxArm: version
-	cd ${BUILD_DIR} && GOARCH=arm64 fyne package -os darwin -icon logo.png --src ../${SRC_FOLDER} --appVersion ${GIT_VERSION_TAG} --release --tags ${APP_TAGS} --appID ${APP_ID} --name ${APP_NAME}	
+	cd ${BUILD_DIR} && GOARCH=arm64 fyne package -os linux -icon logo.png --src ../${SRC_FOLDER} --appVersion ${GIT_VERSION_TAG} --release --tags ${APP_TAGS} --appID ${APP_ID} --name ${APP_NAME}	
 
 app.cross: version
 	fyne-cross darwin -arch=amd64 -output money-clock
